@@ -1,0 +1,78 @@
+group 'demo'
+version '1.0-SNAPSHOT'
+
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.qameta.allure:allure-gradle:2.5"
+        classpath "org.projectlombok:lombok:1.16.20"
+    }
+}
+
+
+ext {
+    projectLombokVersion = '1.16.20'
+    testngVersion = '6.14.2'
+    retrofitVersion = '2.4.0'
+    okHttpVersion = '3.9.0'
+    selenideVersion = '4.10.01'
+    allureVersion = '2.6.0'
+    aspectjVersion = '1.8.13'
+    aspectjVersion = '1.8.13'
+    hamcrestVersion = '1.3'
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'io.qameta.allure'
+
+sourceCompatibility = 1.8
+
+def suite1 = project.hasProperty("ui-test")
+def suite2 = project.hasProperty("api-test")
+
+test {
+    useTestNG {
+        if(suite1) {
+            suites 'src/test/resources/testng.xml'
+        }
+        if(suite2) {
+            suites 'src/test/resources/api-suite.xml'
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+
+allure {
+    version = '2.4.1'
+    aspectjweaver = true
+    autoconfigure = true
+
+    useTestNG {
+        version = '2.6.0'
+    }
+}
+
+
+dependencies {
+    compile "org.aspectj:aspectjweaver:$aspectjVersion"
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+    compile "com.codeborne:selenide:$selenideVersion"
+    compile "io.qameta.allure:allure-testng:$allureVersion"
+    compile "org.projectlombok:lombok:$projectLombokVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testCompile "org.testng:testng:$testngVersion"
+
+}
